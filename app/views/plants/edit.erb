@@ -1,6 +1,6 @@
 <h1>Edit Plant Information</h1>
  
-<form action="<%= @user.username %>/plants" method="POST">
+<form action="<%= @user.username %>/edit/<%= @plant.id%>" method="POST">
     <input id="hidden" type="hidden" name="_method" value="patch">
   <label>Edit Plant Species:</label>
   <br>
