@@ -1,5 +1,23 @@
-<h1>Welcome</h1>
+<h1>Welcome <%=@user.username%>!</h1>
 
-<p>We are currently working on your account.</p>
+<h2>Account Information:</h2>
+<br>
+<h3>Name: <%= @user.name %> </h3>
+<h3>Username: <%= @user.username %> </h3>
+<h3>Email: <%= @user.email %> </h3>
+<h3>Passowrd: <%= @user.password %> </h3>
+<br>
+<br>
 
+<p>Here are all of your saved plants:</p>
+<br>
+<% @user.plants.each do |plant| %>
+    Plant species: <%= @plant.species %>
+    Sprout date: <%=@plant.sprout_date%>
+    Price: <%=@plant.price%>
+    Quantity: <%=@plant.quantity%>
+    <br>
+<% end %>
+
+<p><a href="/plants/new">Add More Plants</a></p>
 <p><a href="/logout">Log Out</a></p>

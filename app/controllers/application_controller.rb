@@ -9,15 +9,23 @@ class ApplicationController < Sinatra::Base
   end
 
   get "/" do
-    erb :index
+    if logged_in?
+      erb :account
+    else
+      erb :index
+    end
   end
+
+  # get '/sequoia.jpg'
+  #   erb :index
+  # end
 
   get "/signup" do
     erb :signup
   end
 
   post "/signup" do
-    user = User.new(:username => params[:username], :password => params[:password])
+    user = User.new(:name => params[:name], :username => params[:username], :email => params[:email], :password => params[:password])
 		if user.username.length > 0 && params[:password] != ""
 			redirect "/login"
 		else
@@ -27,9 +35,14 @@ class ApplicationController < Sinatra::Base
 
   get '/account' do
     @user = User.find(session[:user_id])
+    @plants = @user.plants
     erb :account
   end
 
+  get '/accounts' do
+    @users = User.all
+    erb :'/accounts/index' 
+  end
 
   get "/login" do
     erb :login

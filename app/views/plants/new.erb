@@ -1,0 +1,28 @@
+<h1>Add a New Plant to the Collection!</h1>
+ 
+<form action="<%= user.username %>/plants" method="POST">
+  <label>Plant Species:</label>
+  <br>
+  <input type="text" name="plant_species">
+  <label>Plant Sprout Date:</label>
+  <br>
+  <input type="datetime" name="plant_price">
+  <label>Plant Price:</label>
+  <br>
+  <input type="float" name="plant_price">
+  <label>Plant Quantity:</label>
+  <br>
+  <input type="integer" name="plant_quantity">
+ 
+  <br>
+  <p>Select an plant below to add more of the same type to your stock.</p>
+ 
+ 
+  <h3>Existing Plants</h3>
+  <% @user.plants.each do |plant| %>
+    <input type="radio" name="plant_id" id="<%= plant.id %>" value="<%= plant.id %>"><%= plant.species %>, <%= plant.sprout_date%></input><br>
+  <% end %>
+  <br>
+ 
+  <input type="submit" value="Create Plant">
+</form>
