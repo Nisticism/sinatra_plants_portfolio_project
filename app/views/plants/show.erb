@@ -1,0 +1,9 @@
+Plant Species: <%= @plant.species %>
+Plant Age: <%= @plant.age %>
+Plant Price: <%= @plant.price %>
+Plant Quantity: <%= @plant.quantity %>
+
+<form method="POST" action="<%=@user.username%>/plants/<%=@plant.id%>">
+  <input type="hidden" name="_method" value="DELETE" />
+  <input type="submit" value="delete" />
+</form>
