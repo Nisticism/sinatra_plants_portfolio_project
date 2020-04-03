@@ -15,25 +15,6 @@
   <input type="integer" name="quantity" id = "quantity_id">
   <br>
  
-  <br>
-  <p>Select an plant below to add more of the same type to your stock.</p>
- 
- 
-  <h3>Existing Plants: </h3>
-  <% @user.plants.each do |plant| %>
-    <input type="radio" name="plant_id" id="<%= plant.id %>" value="<%= plant.id %>"><%= plant.species %>, <%= plant.sprout_date%></input><br>
-    <% if document.getElementById(plant.id).checked %>
-    <% document.getElementById(species_id).value = plant.species %>
-    <% document.getElementById(date_id).value = plant.sprout_date %>
-    <% document.getElementById(price_id).value = plant.price %>
-    <% document.getElementById(quantity_id).value = plant.quantity %>
-    <% end %>
-  <% end %>
-  <% if @user.plants.size == 0 %>
-    <h3> No saved plants </h3>
-    <% end %>
-  <br>
- 
   <input type="submit" value="Create Plant">
 </form>
 </html>

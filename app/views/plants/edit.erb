@@ -1,23 +1,26 @@
 <h1>Edit Plant Information</h1>
  
-<form action="" method="POST">
-    <input id="hidden" type="hidden" name="_method" value="patch">
+<form action="/<%= @user.username %>/plants/<%= @plant.id %>" method="post">
+<input type="hidden" name="_method" value="patch">
   <label>Edit Plant Species:</label>
   <br>
-  <input type="text" name="name" value="<%= @plant.species %>">
-  <label>Edit Plant Age:</label>
+  <input type="text" name="plant[species]" value="<%= @plant.species %>">
   <br>
-  <input type="text" name="sprout_date" value="<%= @plant.sprout_date %>">
+  <br>
+  <label>Edit Plant Sprout Date:</label>
+  <br>
+  <input type="text" name="plant[sprout_date]" value="<%= @plant.sprout_date %>">
+  <br>
+  <br>
   <label>Edit Plant Price:</label>
   <br>
-  <input type="text" name="price" value="<%= @plant.price %>">
+  <input type="text" name="plant[price]" value="<%= @plant.price %>">
+  <br>
+  <br>
   <label>Edit Plant Quantity:</label>
   <br>
-  <input type="text" name="quantity" value="<%= @plant.quantity %>">
-
-
-
-
- 
-  <input type="submit" value="Update Plant">
+  <input type="text" name="plant[quantity]" value="<%= @plant.quantity %>">
+  <br>
+  <br>
+  <input type="submit" value = "Update Plant">
 </form>

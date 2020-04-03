@@ -17,6 +17,16 @@ class ApplicationController < Sinatra::Base
     end
   end
 
+  post "/login" do
+    user = User.find_by(:username => params[:username])
+		if user && user.authenticate(params[:password])
+			session[:user_id] = user.id
+			redirect to "/account"
+		else
+			redirect to "/failure"
+		end
+  end
+
   # get '/sequoia.jpg'
   #   erb :index
   # end
@@ -30,19 +40,27 @@ class ApplicationController < Sinatra::Base
   end
 
   post "/signup" do
-    user = User.new(:name => params[:name], :username => params[:username], :email => params[:email], :password => params[:password])
+    if !User.find_by(:username => params[:username])
+      user = User.new(:name => params[:name], :username => params[:username], :email => params[:email], :password => params[:password])
+    else
+      redirect to '/failure'
+    end
     if user.username.length > 0 && params[:password] != ""
       user.save
-			redirect "/login"
+			redirect to "/login"
 		else
-			redirect "/failure"
+			redirect to "/failure"
 		end
   end
 
   get '/account' do
-    @user = User.find(session[:user_id])
-    @plants = @user.plants
-    erb :account
+    @user = User.find_by_id(session[:user_id])
+    if @user
+      @plants = @user.plants
+      erb :account
+    else
+      redirect to '/failure'
+    end
   end
 
   get '/:username' do
@@ -78,15 +96,15 @@ class ApplicationController < Sinatra::Base
     end
   end
 
-  get '/:username/plants/:id' do
-    if logged_in?
-      @user = User.find(session[:user_id])
-      @plant = Plant.find(params[:id])
-      erb :'plants/show'
-    else
-      redirect to '/failure'
-    end
-  end
+  # get '/:username/plants/:id' do
+  #   if logged_in?
+  #     @user = User.find(session[:user_id])
+  #     @plant = Plant.find(params[:id])
+  #     erb :'plants/show'
+  #   else
+  #     redirect to '/failure'
+  #   end
+  # end
 
   get '/:username/plants/:id/edit' do
     if logged_in?
@@ -98,17 +116,19 @@ class ApplicationController < Sinatra::Base
       redirect to '/failure'
     end
   end
-  
+
   patch '/:username/plants/:id' do
     if logged_in?
-      @plant = Plant.find(params[:id])
+      @plant = Plant.find_by_id(params[:id])
       @plant.update(params[:plant])
       @plant.save
-      redirect to '/:username/plants/#{@plant.id}'
+      @user = User.find(session[:user_id])
+      erb :'plants/show'
     else
       redirect to '/failure'
     end
   end
+  
 
   post '/:username/plants' do 
     plant = Plant.new(params[:species])
@@ -119,30 +139,30 @@ class ApplicationController < Sinatra::Base
     erb :'/accounts/index' 
   end
 
-  post "/login" do
-    user = User.find_by(:username => params[:username])
-    #binding.pry
-		if user && user.authenticate(params[:password])
-			session[:user_id] = user.id
-			redirect "/account"
-		else
-			redirect "/failure"
-		end
-  end
-
   delete '/:username/plants/:id' do
+    @user = User.find(session[:user_id])
     @plant = Plant.find(params[:id])
     @plant.delete
-    redirect to '/account'
+    redirect to "/account"
+    puts "hello"
   end
 
-  get "/failure" do
+  post "/failure" do
     erb :failure
   end
 
-  get "/logout" do
+  get '/failure' do 
+    erb :failure
+  end
+
+  get '/logout' do
     session.clear
-    redirect "/"
+    redirect to '/'
+  end
+
+  post '/logout' do
+    session.clear 
+    redirect to '/'
   end
 
   helpers do

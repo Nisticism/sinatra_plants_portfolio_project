@@ -15,6 +15,12 @@
     Price: <%=plant.price%>
     Quantity: <%=plant.quantity%>
     <br>
+    <% @id = plant.id %>
+    <a href="/<%=@user.username%>/plants/<%=@id%>/edit">Edit Plant</a>
+    <form method="POST" action="/<%=@user.username%>/plants/<%=@id%>">
+    <input type="hidden" name="_method" value="DELETE" />
+     <input type="submit" value="Delete" />
+    </form>
 <% end %>
 <% if @user.plants.size == 0 %>
     <h3> No saved plants </h3>
