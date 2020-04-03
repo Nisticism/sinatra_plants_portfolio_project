@@ -154,20 +154,11 @@ class ApplicationController < Sinatra::Base
     erb :failure
   end
 
-  get '/logout' do
+  delete '/logout' do
     session.clear
-    session[:user_id] = nil
-    binding.pry
     redirect to '/'
   end
-
-  post '/logout' do
-    session.clear 
-    session[:user_id] = nil
-    binding.pry
-    redirect to '/'
-  end
-
+  
   helpers do
     def logged_in?
       !!session[:user_id]

@@ -28,4 +28,8 @@
     <br>
 
 <p><a href="/<%=@user.username%>/new">Add More Plants</a></p>
-<p><a href="/logout">Log Out</a></p>
+
+<form method="POST" action="/logout">
+    <input type="hidden" name="_method" value="DELETE" />
+    <input type="submit" value="Log Out" />
+</form>
