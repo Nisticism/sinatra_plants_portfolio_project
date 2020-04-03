@@ -55,7 +55,7 @@ class ApplicationController < Sinatra::Base
 
   get '/account' do
     @user = User.find_by_id(session[:user_id])
-    if @user
+    if @user && logged_in?
       @plants = @user.plants
       erb :account
     else
@@ -144,7 +144,6 @@ class ApplicationController < Sinatra::Base
     @plant = Plant.find(params[:id])
     @plant.delete
     redirect to "/account"
-    puts "hello"
   end
 
   post "/failure" do
@@ -157,11 +156,15 @@ class ApplicationController < Sinatra::Base
 
   get '/logout' do
     session.clear
+    session[:user_id] = nil
+    binding.pry
     redirect to '/'
   end
 
   post '/logout' do
     session.clear 
+    session[:user_id] = nil
+    binding.pry
     redirect to '/'
   end
 
