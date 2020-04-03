@@ -16,6 +16,10 @@
     Quantity: <%=plant.quantity%>
     <br>
 <% end %>
+<% if @user.plants.size == 0 %>
+    <h3> No saved plants </h3>
+    <% end %>
+    <br>
 
 <p><a href="/<%=@user.username%>/new">Add More Plants</a></p>
 <p><a href="/logout">Log Out</a></p>

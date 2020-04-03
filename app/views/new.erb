@@ -1,17 +1,18 @@
+<html>
 <h1>Add a New Plant to the Collection!</h1>
  
-<form action="/<%=@user.username%>/show_plant" method="POST">
+<form action="/<%=@user.username%>/plants/<%= @id %>" method="POST">
   <label>Plant Species:  </label>
-  <input type="text" name="species">
+  <input type="text" name="species" id = "species_id">
   <br>
   <label>Plant Sprout Date:  </label>
-  <input type="datetime" name="sprout_date">
+  <input type="datetime" name="sprout_date" id="date_id">
   <br>
   <label>Plant Price:  </label>
-  <input type="float" name="price">
+  <input type="float" name="price" id = "price_id">
   <br>
   <label>Plant Quantity:  </label>
-  <input type="integer" name="quantity">
+  <input type="integer" name="quantity" id = "quantity_id">
   <br>
  
   <br>
@@ -21,6 +22,12 @@
   <h3>Existing Plants: </h3>
   <% @user.plants.each do |plant| %>
     <input type="radio" name="plant_id" id="<%= plant.id %>" value="<%= plant.id %>"><%= plant.species %>, <%= plant.sprout_date%></input><br>
+    <% if document.getElementById(plant.id).checked %>
+    <% document.getElementById(species_id).value = plant.species %>
+    <% document.getElementById(date_id).value = plant.sprout_date %>
+    <% document.getElementById(price_id).value = plant.price %>
+    <% document.getElementById(quantity_id).value = plant.quantity %>
+    <% end %>
   <% end %>
   <% if @user.plants.size == 0 %>
     <h3> No saved plants </h3>
@@ -29,3 +36,4 @@
  
   <input type="submit" value="Create Plant">
 </form>
+</html>

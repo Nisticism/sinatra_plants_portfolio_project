@@ -23,6 +23,10 @@ class ApplicationController < Sinatra::Base
 
   get "/signup" do
     erb :signup
+  end 
+
+  get "/login" do
+    erb :login
   end
 
   post "/signup" do
@@ -41,53 +45,70 @@ class ApplicationController < Sinatra::Base
     erb :account
   end
 
+  get '/:username' do
+    if logged_in?
+      @user = User.find(session[:user_id])
+      @plants = @user.plants
+      erb :account
+    else
+      redirect to '/failure'
+    end
+  end
+
   get '/:username/new' do
     if logged_in?
       @user = User.find(session[:user_id])
+      @plants = @user.plants
+      @id = @plants.size + 1
       erb :new
     else
       redirect to '/failure'
     end
   end
 
-  post '/:username/show_plant' do
+  post '/:username/plants/:id' do
     @user = User.find(session[:user_id])
     @plant = Plant.new(species: params["species"], sprout_date: params["sprout_date"], price: params["price"], quantity: params["quantity"], user_id: @user.id)
     if @plant.species
       @plant.save
-      erb :'plants/show'
+      @id = @plant.id
+      erb :'/plants/show'
     else 
       redirect to '/failure'
     end
   end
 
-  get '/:username/edit/:id' do
+  get '/:username/plants/:id' do
     if logged_in?
       @user = User.find(session[:user_id])
-      erb :'plants/edit'
+      @plant = Plant.find(params[:id])
+      erb :'plants/show'
     else
       redirect to '/failure'
     end
   end
 
-  patch '/:username/edit/:id' do
-    @plant = Plant.find(params[:id])
-    @plant.update(params[:plant])
-    @plant.save
-    redirect to ':username/plants/#{@plant.id}'
+  get '/:username/plants/:id/edit' do
+    if logged_in?
+      @id = params[:id]
+      @user = User.find(session[:user_id])
+      @plant = Plant.find(@id)
+      erb :'plants/edit'
+    else
+      redirect to '/failure'
+    end
   end
-
-  get ':username/plants/:id'
-    @plant = Plant.find(params[:id])
-    erb :'plants/show'
+  
+  patch '/:username/plants/:id' do
+    if logged_in?
+      @plant = Plant.find(params[:id])
+      @plant.update(params[:plant])
+      @plant.save
+      redirect to '/:username/plants/#{@plant.id}'
+    else
+      redirect to '/failure'
+    end
   end
-
-
-  # get ':username/show_plant/plant_id'
-  #   @user = User.find(session[:user_id])
-  #   @plant = @user.plants.last
-  #   erb :'plants/show'
-  # end 
 
   post '/:username/plants' do 
     plant = Plant.new(params[:species])
@@ -96,10 +117,6 @@ class ApplicationController < Sinatra::Base
   get '/accounts' do
     @users = User.all
     erb :'/accounts/index' 
-  end
-
-  get "/login" do
-    erb :login
   end
 
   post "/login" do
@@ -111,6 +128,12 @@ class ApplicationController < Sinatra::Base
 		else
 			redirect "/failure"
 		end
+  end
+
+  delete '/:username/plants/:id' do
+    @plant = Plant.find(params[:id])
+    @plant.delete
+    redirect to '/account'
   end
 
   get "/failure" do
