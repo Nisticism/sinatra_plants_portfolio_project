@@ -1,4 +1,4 @@
-require './app/controllers/application_controller'
+require './config/environment.rb'
 
 use Rack::MethodOverride
 

@@ -1,33 +1,33 @@
-<h1>Welcome <%=@user.username%>!</h1>
+<h1>Welcome <%=current_user.username%>!</h1>
 
 <h2>Account Information:</h2>
 <br>
-<h3>Name: <%= @user.name %> </h3>
-<h3>Username: <%= @user.username %> </h3>
-<h3>Email: <%= @user.email %> </h3>
+<h3>Name: <%= current_user.name %> </h3>
+<h3>Username: <%= current_user.username %> </h3>
+<h3>Email: <%= current_user.email %> </h3>
 <br>
 
 <p>Here are all of your saved plants:</p>
 <br>
-<% @user.plants.each do |plant| %>
+<% @plants.each do |plant| %>
     Plant species: <%= plant.species %>
     Sprout date: <%=plant.sprout_date%>
     Price: <%=plant.price%>
     Quantity: <%=plant.quantity%>
     <br>
     <% @id = plant.id %>
-    <a href="/<%=@user.username%>/plants/<%=@id%>/edit">Edit Plant</a>
-    <form method="POST" action="/<%=@user.username%>/plants/<%=@id%>">
+    <a href="/<%=current_user.username%>/plants/<%=@id%>/edit">Edit Plant</a>
+    <form method="POST" action="/<%=current_user.username%>/plants/<%=@id%>">
     <input type="hidden" name="_method" value="DELETE" />
      <input type="submit" value="Delete" />
     </form>
 <% end %>
-<% if @user.plants.size == 0 %>
+<% if @plants.size == 0 %>
     <h3> No saved plants </h3>
     <% end %>
     <br>
 
-<p><a href="/<%=@user.username%>/new">Add More Plants</a></p>
+<p><a href="/<%=current_user.username%>/plants/new">Add More Plants</a></p>
 
 <form method="POST" action="/logout">
     <input type="hidden" name="_method" value="DELETE" />

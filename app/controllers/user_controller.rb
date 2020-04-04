@@ -1,12 +1,7 @@
 class UserController < ApplicationController
 
     get "/" do
-        if logged_in?
-          @user = User.find(session[:user_id])
-          erb :account
-        else
-          erb :index
-        end
+        redirect to '/index'
       end
     
       post "/login" do
@@ -18,79 +13,68 @@ class UserController < ApplicationController
                 redirect to "/failure"
             end
       end
-    
-      # get '/sequoia.jpg'
-      #   erb :index
-      # end
+
+      get "/index" do
+        redirect to '/account' if logged_in?
+        erb :index
+      end 
+
+  
     
       get "/signup" do
+        redirect to '/account' if logged_in?
         erb :signup
       end 
     
       get "/login" do
+        redirect to '/account' if logged_in?
         erb :login
       end
     
       post "/signup" do
         if !User.find_by(:username => params[:username])
           user = User.new(:name => params[:name], :username => params[:username], :email => params[:email], :password => params[:password])
-        else
-          redirect to '/failure'
+          if user.username.length > 0 && params[:password] != ""
+            user.save
+            session[:user_id] = user.id
+            redirect to "/account"
+          else 
+            @error = "Must provide a valid username and password."
+            erb :signup
+          end
+        else 
+          @error = "Username already in use."
+          erb :signup
         end
-        if user.username.length > 0 && params[:password] != ""
-          user.save
-                redirect to "/login"
-            else
-                redirect to "/failure"
-            end
       end
     
       get '/account' do
-        @user = User.find_by_id(session[:user_id])
-        if @user && logged_in?
-          @plants = @user.plants
-          erb :account
-        else
-          redirect to '/failure'
-        end
-      end
-    
-      get '/:username' do
         if logged_in?
-          @user = User.find(session[:user_id])
-          @plants = @user.plants
-          erb :account
+        redirect to "/#{current_user.username}"
         else
-          redirect to '/failure'
+          redirect to "/failure"
         end
       end
 
-      get '/accounts' do
-        @users = User.all
-        erb :'/accounts/index' 
-      end
-
-      post "/failure" do
-        erb :failure
-      end
-    
       get '/failure' do 
         erb :failure
       end
-    
+
+      get '/:username' do
+        if logged_in? && params[:username] == current_user.username
+
+          @plants = current_user.plants
+          erb :account
+        else
+          redirect to '/failure'
+        end
+      end
+      
       delete '/logout' do
         session.clear
         redirect to '/'
       end
     
-      helpers do
-        def logged_in?
-          !!session[:user_id]
-        end
-    
-        def current_user
-          User.find(session[:user_id])
-        end
-      end
+     
 
 end

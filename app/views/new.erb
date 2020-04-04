@@ -1,20 +1,40 @@
 <html>
+<p><%= @error %></p>
+
 <h1>Add a New Plant to the Collection!</h1>
+
+<form action="/<%=current_user.username%>/plants" method="POST">
+<br>
  
-<form action="/<%=@user.username%>/plants/<%= @id %>" method="POST">
+  
   <label>Plant Species:  </label>
-  <input type="text" name="species" id = "species_id">
+  <input type="text" name="plant[species]" id = "species_id" value="<%= @plant.species %>">
   <br>
   <label>Plant Sprout Date:  </label>
-  <input type="datetime" name="sprout_date" id="date_id">
+  <input type="datetime" name="plant[sprout_date]" id="date_id"  value="<%= @plant.sprout_date %>">
   <br>
   <label>Plant Price:  </label>
-  <input type="float" name="price" id = "price_id">
+  <input type="float" name="plant[price]" id = "price_id"  value="<%= @plant.price %>">
   <br>
   <label>Plant Quantity:  </label>
-  <input type="integer" name="quantity" id = "quantity_id">
+  <input type="integer" name="plant[quantity]" id = "quantity_id"  value="<%= @plant.quantity %>">
   <br>
  
   <input type="submit" value="Create Plant">
+</form>
+
+<h1> Or select one of these to use it as a template: </h1>
+ 
+<h3>Existing Plants: </h3>
+<form action="/<%= current_user.username %>/plants/new" method="POST">
+<% current_user.plants.each do |plant| %>
+  <input type="radio" name="plant_id" id="<%= plant.id %>" value="<%= plant.id %>"><%= plant.species %>, <%= plant.sprout_date%></input><br>
+
+<% end %>
+<% if current_user.plants.size == 0 %>
+  <h3> No saved plants </h3>
+  <% end %>
+<br>
+  <input type="submit" value="Fill Fields" />
 </form>
 </html>
